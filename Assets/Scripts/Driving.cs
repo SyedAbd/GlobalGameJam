@@ -1,16 +1,14 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
     private float horizontalInput, verticalInput;
-    private float currentSteerAngle, currentbreakForce;
-    private bool isBreaking;
+    private float currentSteerAngle, currentBreakForce;
 
     // Settings
-    [SerializeField] private float motorForce, breakForce, maxSteerAngle;
+    [SerializeField] private float baseMotorForce = 1000f; // Adjust this value for the base motor force
+    [SerializeField] private float breakForce = 2000f; // Adjust this value for braking force
+    [SerializeField] private float maxSteerAngle = 45f;
 
     // Wheel Colliders
     [SerializeField] private WheelCollider frontLeftWheelCollider, frontRightWheelCollider;
@@ -19,6 +17,9 @@ public class CarController : MonoBehaviour
     // Wheels
     [SerializeField] private Transform frontLeftWheelTransform, frontRightWheelTransform;
     [SerializeField] private Transform rearLeftWheelTransform, rearRightWheelTransform;
+
+    // Speed-up factor
+    [SerializeField] private float speedUpFactor = 500f; // Adjust this value to control the speed-up factor
 
     private void FixedUpdate()
     {
@@ -35,25 +36,34 @@ public class CarController : MonoBehaviour
 
         // Acceleration Input
         verticalInput = Input.GetAxis("Vertical");
-
-        // Breaking Input
-        isBreaking = Input.GetKey(KeyCode.Space);
     }
 
     private void HandleMotor()
     {
-        frontLeftWheelCollider.motorTorque = verticalInput * motorForce;
-        frontRightWheelCollider.motorTorque = verticalInput * motorForce;
-        currentbreakForce = isBreaking ? breakForce : 0f;
+        // Adjust the motor force based on the speed-up factor
+        float currentMotorForce = baseMotorForce + (speedUpFactor * Mathf.Abs(horizontalInput));
+
+        // If no acceleration input, apply braking force
+        if (Mathf.Abs(verticalInput) < 0.01f)
+        {
+            currentBreakForce = breakForce;
+        }
+        else
+        {
+            currentBreakForce = 0f;
+        }
+
+        frontLeftWheelCollider.motorTorque = verticalInput * currentMotorForce;
+        frontRightWheelCollider.motorTorque = verticalInput * currentMotorForce;
         ApplyBreaking();
     }
 
     private void ApplyBreaking()
     {
-        frontRightWheelCollider.brakeTorque = currentbreakForce;
-        frontLeftWheelCollider.brakeTorque = currentbreakForce;
-        rearLeftWheelCollider.brakeTorque = currentbreakForce;
-        rearRightWheelCollider.brakeTorque = currentbreakForce;
+        frontRightWheelCollider.brakeTorque = currentBreakForce;
+        frontLeftWheelCollider.brakeTorque = currentBreakForce;
+        rearLeftWheelCollider.brakeTorque = currentBreakForce;
+        rearRightWheelCollider.brakeTorque = currentBreakForce;
     }
 
     private void HandleSteering()
