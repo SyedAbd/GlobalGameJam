@@ -1,22 +1,26 @@
 using UnityEngine;
+using System.Collections;
 
 public class Audioplayer : MonoBehaviour
 {
     public AudioClip[] collisionSounds;
     private AudioSource audioSource;
 
+    private bool isAudioPlaying = false;
+
     void Start()
     {
         audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false; 
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Entered collosion");
-        
-        if (collision.gameObject.CompareTag("fence"))
+        Debug.Log("Entered collision");
+
+     
+        if (collision.gameObject.CompareTag("fence") && !isAudioPlaying)
         {
-            
             PlayRandomCollisionSound();
         }
     }
@@ -25,14 +29,23 @@ public class Audioplayer : MonoBehaviour
     {
         if (collisionSounds.Length > 0)
         {
-            // Select a random audio clip
+            
             AudioClip randomClip = collisionSounds[Random.Range(0, collisionSounds.Length)];
 
-            // Assign the selected clip to the AudioSource
+            
             audioSource.clip = randomClip;
 
-            // Play the collision sound
             audioSource.Play();
+
+            isAudioPlaying = true;
+
+            StartCoroutine(ResetAudioFlag(randomClip.length));
         }
+    }
+
+    IEnumerator ResetAudioFlag(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        isAudioPlaying = false;
     }
 }
