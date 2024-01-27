@@ -9,7 +9,7 @@ public class CarController : MonoBehaviour
     [SerializeField] private float baseMotorForce = 1000f; // Adjust this value for the base motor force
     [SerializeField] private float breakForce = 2000f; // Adjust this value for braking force
     [SerializeField] private float maxSteerAngle = 45f;
-    [SerializeField] private float forceAmount = 100f;
+    [SerializeField] private float forceAmount = 10f;
 
     // Wheel Colliders
     [SerializeField] private WheelCollider frontLeftWheelCollider, frontRightWheelCollider;
