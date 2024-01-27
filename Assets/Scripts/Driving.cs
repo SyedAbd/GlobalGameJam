@@ -68,7 +68,7 @@ public class CarController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W))
         {
-            if(angle < 90)
+            if(angle < 90&& IsGrounded())
             {
                 movement += transform.forward;
                 movement.Normalize();
@@ -80,7 +80,7 @@ public class CarController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.S))
         {
-            if (angle > 90) { 
+            if (angle > 90 && IsGrounded()) { 
                 movement -= transform.forward;
             movement.Normalize();
             rb.velocity = movement * forceAmount;
@@ -123,5 +123,10 @@ public class CarController : MonoBehaviour
         wheelCollider.GetWorldPose(out pos, out rot);
         wheelTransform.rotation = rot;
         wheelTransform.position = pos;
+    }
+    private bool IsGrounded()
+    {
+        return frontLeftWheelCollider.isGrounded || frontRightWheelCollider.isGrounded ||
+               rearLeftWheelCollider.isGrounded || rearRightWheelCollider.isGrounded;
     }
 }
