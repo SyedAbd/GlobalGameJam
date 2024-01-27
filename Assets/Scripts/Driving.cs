@@ -68,7 +68,7 @@ public class CarController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W))
         {
-            if(angle < 90&& IsGrounded())
+            if((angle < 90 || rb.velocity.magnitude <1) && IsGrounded())
             {
                 movement += transform.forward;
                 movement.Normalize();
@@ -80,7 +80,7 @@ public class CarController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.S))
         {
-            if (angle > 90 && IsGrounded()) { 
+            if ((angle < 90 || rb.velocity.magnitude < 1) && IsGrounded()) { 
                 movement -= transform.forward;
             movement.Normalize();
             rb.velocity = movement * forceAmount;
