@@ -9,11 +9,12 @@ public class CarController : MonoBehaviour
     [SerializeField] private float baseMotorForce = 1000f; // Adjust this value for the base motor force
     [SerializeField] private float breakForce = 2000f; // Adjust this value for braking force
     [SerializeField] private float maxSteerAngle = 45f;
+    [SerializeField] private float forceAmount = 10f;
 
     // Wheel Colliders
     [SerializeField] private WheelCollider frontLeftWheelCollider, frontRightWheelCollider;
     [SerializeField] private WheelCollider rearLeftWheelCollider, rearRightWheelCollider;
-
+    private Rigidbody rb;
     // Wheels
     [SerializeField] private Transform frontLeftWheelTransform, frontRightWheelTransform;
     [SerializeField] private Transform rearLeftWheelTransform, rearRightWheelTransform;
@@ -37,7 +38,10 @@ public class CarController : MonoBehaviour
         // Acceleration Input
         verticalInput = Input.GetAxis("Vertical");
     }
-
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
     private void HandleMotor()
     {
         // Adjust the motor force based on the speed-up factor
@@ -57,7 +61,38 @@ public class CarController : MonoBehaviour
         frontRightWheelCollider.motorTorque = verticalInput * currentMotorForce;
         ApplyBreaking();
     }
+    private void Update()
+    {
+        Vector3 movement = Vector3.zero;
+        float angle = Vector3.Angle(transform.forward, rb.velocity);
 
+        if (Input.GetKey(KeyCode.W))
+        {
+            if(angle < 90&& IsGrounded())
+            {
+                movement += transform.forward;
+                movement.Normalize();
+                rb.velocity = movement * forceAmount;
+            }
+
+        }
+
+
+        if (Input.GetKey(KeyCode.S))
+        {
+            if (angle > 90 && IsGrounded()) { 
+                movement -= transform.forward;
+            movement.Normalize();
+            rb.velocity = movement * forceAmount;
+        }
+        }
+
+        // Normalize the movement vector to ensure consistent speed in all directions
+        
+
+        // Apply the velocity to the Rigidbody
+       
+    }
     private void ApplyBreaking()
     {
         frontRightWheelCollider.brakeTorque = currentBreakForce;
@@ -88,5 +123,10 @@ public class CarController : MonoBehaviour
         wheelCollider.GetWorldPose(out pos, out rot);
         wheelTransform.rotation = rot;
         wheelTransform.position = pos;
+    }
+    private bool IsGrounded()
+    {
+        return frontLeftWheelCollider.isGrounded || frontRightWheelCollider.isGrounded ||
+               rearLeftWheelCollider.isGrounded || rearRightWheelCollider.isGrounded;
     }
 }
