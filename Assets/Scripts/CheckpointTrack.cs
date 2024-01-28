@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class CheckpointTrack : MonoBehaviour
 {
     [SerializeField] int Checkpoints = 0;
     private List<string> triggeredCheckpoints = new List<string>();
+    //public GameObject winScreen;
 
     // Start is called before the first frame update
     void Start()
@@ -17,7 +18,8 @@ public class CheckpointTrack : MonoBehaviour
     {
         if (Checkpoints == 9)
         {
-            // End game here
+            SceneManager.LoadSceneAsync("WinningScene");
+            //winScreen.SetActive(true);
         }
     }
 
