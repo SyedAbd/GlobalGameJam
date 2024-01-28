@@ -6,6 +6,15 @@ TagManager:
   tags:
   - Car
   - fence
+  - checkpoint1
+  - checkpoint2
+  - checkpoint3
+  - checkpoint4
+  - checkpoint5
+  - checkpoint6
+  - checkpoint7
+  - checkpoint8
+  - checkpoint9
   layers:
   - Default
   - TransparentFX
