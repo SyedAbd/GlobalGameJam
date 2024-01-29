@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    //public GameObject pauseMenu;
+    public GameObject pauseMenu;
 
     // Update is called once per frame
     void Update()
@@ -20,12 +20,12 @@ public class GameManager : MonoBehaviour
             if (Time.timeScale == 1)
             {
                 Time.timeScale = 0;
-                //pauseMenu.SetActive(true);
+                pauseMenu.SetActive(true);
             }
             else
             {
                 Time.timeScale = 1;
-                //pauseMenu.SetActive(false);
+                pauseMenu.SetActive(false);
             }
         }
     }
@@ -38,5 +38,11 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void ContinueGame()
+    { 
+        Time.timeScale = 1;
+        pauseMenu.SetActive(false);
     }
 }
